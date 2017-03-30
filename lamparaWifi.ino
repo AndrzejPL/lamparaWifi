@@ -8,12 +8,8 @@
   #include <avr/power.h>
 #endif
 
-const char* ssid = "MOVISTARTL";
-const char* password = "Martin89";
-
-//Configuracion de casa de Sarah
-//const char* ssid = "PAPERCHASE";
-//const char* password = "A8DAFDBD7CE941CF30D8";
+const char* ssid = "TuSSDI";
+const char* password = "PASSWORDdelaRED";
 
 #define PIN 4
 #define NUMPIXELS 16
