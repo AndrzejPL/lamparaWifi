@@ -3,13 +3,18 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <Adafruit_NeoPixel.h>
+#include "confi.h"
 
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
 
+<<<<<<< HEAD
+
+=======
 const char* ssid = "TuSSDI";
 const char* password = "PASSWORDdelaRED";
+>>>>>>> 8728117a3949f84c9150cab987f45a54c56b346d
 
 #define PIN 4
 #define NUMPIXELS 16
@@ -136,6 +141,7 @@ void setup(void){
     if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
   #endif
   
+  WiFi.mode(WIFI_AP_STA); 
   pinMode(led, OUTPUT);
   digitalWrite(led, 0);
   Serial.begin(115200);
@@ -143,16 +149,44 @@ void setup(void){
   pixels.begin();
   Serial.println("");
 
-  // Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+  for(int i=0;i<NUMPIXELS;i++){   
+    pixels.setPixelColor(i, pixels.Color(0,0,255));
+    pixels.setBrightness(100);
+    pixels.show(); 
+    delay(200);
   }
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
+  for(int i=0;i<NUMPIXELS;i++){   
+    pixels.setPixelColor(i, pixels.Color(0,0,0));
+    pixels.show(); 
+    delay(200);
+  } 
+  // Wait for connection
+  if (WiFi.status() == WL_CONNECTED) {
+      pixels.setPixelColor(3, pixels.Color(0,255,0));
+      pixels.show(); 
+      Serial.println("");
+      Serial.print("Connected to ");
+      Serial.println(ssid);
+      Serial.print("IP address: ");
+      Serial.println(WiFi.localIP());
+      pixels.setPixelColor(3, pixels.Color(0,0,0));
+      pixels.show();
+  }else{
+    WiFi.mode(WIFI_AP);
+    pixels.setPixelColor(3, pixels.Color(255,0,0));
+    pixels.show(); 
+    Serial.println("Configuring access point...");  
+    WiFi.softAP(nombreRed, claveRed); 
+    delay(500);
+    IPAddress myIP = WiFi.softAPIP();
+    Serial.println(nombreRed);
+    Serial.print("AP IP address: ");
+    Serial.println(myIP);
+    pixels.setPixelColor(3, pixels.Color(0,0,0));
+    pixels.show(); 
+  }
+  
+
 
   if (MDNS.begin("esp8266")) {
     Serial.println("MDNS responder started");
